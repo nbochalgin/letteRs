@@ -35,7 +35,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# Примеры писем и персформ
+# Примеры писем и персонифицированных форм
 /examples/*
 
 # Сформированные документы
