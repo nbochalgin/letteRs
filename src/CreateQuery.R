@@ -1,5 +1,15 @@
-#формировать текст запроса в БД на дату отчёта
-CreateQuery <- function(report_date, if_frag) {
+#' Query creator
+#' 
+#' @param report_date Date (YYYY-MM-DD) of report.
+#' @param if_frag A flag to mark sequencing method. TRUE for WGS.
+#'
+#' @return A query text
+#' @export
+#'
+#' @examples
+#' CreateQuery(report_date = 2022-02-06, if_frag = TRUE)
+
+CreateQuery <- function(report_date, if_frag=FALSE) {
   if (if_frag) {wgs_id_mark <- "IS NULL"} else {wgs_id_mark <- "IS NOT NULL"}
   
   glue(
@@ -18,5 +28,4 @@ CreateQuery <- function(report_date, if_frag) {
        AND wgs_res.nipchi_id {wgs_id_mark} 
        AND frag_res.variant IN ('Delta', 'Omicron', 'Probable Omicron', 'Иной')
   ORDER BY nipchi_id;")
-  
 }
