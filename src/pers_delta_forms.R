@@ -8,8 +8,6 @@ suppressPackageStartupMessages({
   library("stringi")
 })
 
-report_date <- as.Date("2022-01-21")
-
 region <- c("Республика Тыва",
             "Республика Бурятия",
             "Республика Хакасия",
@@ -27,8 +25,8 @@ SitGetQuery <- function(query) {
                    dbname = 'frag_seq_db', 
                    host = '192.168.0.145',
                    port = 5432,
-                   user = 'ban',
-                   password = 'rulethemall')
+                   user = 'postgres',
+                   password = Sys.getenv("frag_seq_db"))
   db_output <- dbGetQuery(con, query)
   dbDisconnect(con)
   return(db_output)
@@ -38,30 +36,27 @@ SitGetQuery <- function(query) {
 CreateQuery <- function(region) {
   glue(
   "    SELECT income.nipchi_id AS nipchi_id
-         , income.income_id AS number
-         , income.fio AS fio
-         , income.region AS region
-         , income.sex AS sex
-         , income.age AS age
-         , income.last_disease_start_date AS disease_date
-         , LOWER(income.clinic) AS clinic
-         , 'ФКУЗ Иркутский НИПЧИ' AS lab
-         , frag_res.variant AS variant
-         , frag_res.date_end AS date_end
-         , income.epid_anamnesis AS anamnesis
-      FROM income_probes AS income
- LEFT JOIN frag_seq_results AS frag_res
-        ON frag_res.nipchi_id = income.nipchi_id
- LEFT JOIN wgs_results AS wgs_res
-        ON wgs_res.nipchi_id = frag_res.nipchi_id
-     WHERE wgs_res.nipchi_id IS NULL
-       AND income.region = '{region}'
-       AND frag_res.variant != 'Не определено'
-       AND frag_res.date_end = '{report_date}'
-       AND frag_res.variant IN ('Delta', 'Omicron', 'Probable Omicron', 'Иной')
+            , income.income_id AS number
+            , income.fio AS fio
+            , income.region AS region
+            , income.sex AS sex
+            , income.age AS age
+            , income.last_disease_start_date AS disease_date
+            , LOWER(income.clinic) AS clinic
+            , 'ФКУЗ Иркутский НИПЧИ' AS lab
+            , frag_results.variant AS variant
+            , frag_results.date_end AS date_end
+            , income.epid_anamnesis AS anamnesis
+         FROM income_probes AS income
+    LEFT JOIN frag_seq_results AS frag_results
+           ON frag_results.nipchi_id = income.nipchi_id
+   RIGHT JOIN wgs_results AS wgs
+           ON wgs.nipchi_id = income.nipchi_id
+        WHERE wgs.run_id = 'ch_ON_42'
+          AND income.region = '{region}'
+          AND frag_results.variant IN ('Delta', 'Omicron', 'Probable Omicron', 'Иной')
      ORDER BY nipchi_id")
 }
-
 
 #подготовка табличных данных
 CreateForm <- function(region) {
