@@ -11,106 +11,33 @@ suppressPackageStartupMessages({
 })
 
 source("src/CreateQuery.R")
-source("src/db_connector.R")
+source("src/SitGetQuery.R")
+source("src/body_add_par_n.R")
+source("src/createBody.R")
+source("src/createHeading.R")
+
 
 if_frag <- FALSE
-# report_date <- as.Date('2022-01-26')
-report_date <- Sys.Date()
+report_date <- as.Date('2022-02-06')
+# report_date <- Sys.Date()
 
 ########## ФУНКЦИИ ##########
 
-#добавлять много абзацев
-body_add_par_n <- function(doc, n) {
-  i <- 1
-  while (i <= n) {
-    doc <- body_add_par(doc, "", style = "Normal")
-    i <- i+1
-  }
-  return(doc)
-}
-
-#создание шапки письма по форме
-createHeading <- function(key) {
-  heading <- tibble(sender_info,
-                    recipient_info[recipient_info$key == key, 2]) %>%
-    flextable() %>% 
-    delete_part(part = "header") %>% 
-    align(align = "center", part = "body") %>% 
-    width(j = 1:2,
-          width = c(4, 3),
-          unit = "in") %>% 
-    font(i = NULL, j = NULL,
-         fontname = "Liberation Serif",
-         part = "body") %>% 
-    fontsize(i = 1, j = 1,
-             size = 10,
-             part = "body") %>%
-    fontsize(i = 1, j = 2,
-             size = 13,
-             part = "body") %>%
-    bold(i = 1, j = 2,
-         bold = TRUE,
-         part = "body") %>% 
-    border_remove()
-  
-  return(heading)
-}
-
-#создание тела письма
-createBody <- function(region_key) {
-  region <- iso_dict$region[iso_dict$key == region_key]
-  
-  body_blank <- filter(body_text, stri_detect_fixed(key, region_key)) %>% 
-    pull(body) %>% 
-    .[[1]] %>% 
-    as.list()
-  
-  body <- list(
-    paste(unique(full_table$variant), collapse = ", "),
-    paste(iso_dict$rp[iso_dict$region == unique(full_table$region)], collapse = ", "),
-    NA) %>% 
-    Map(c, body_blank, .) %>% 
-    unlist() %>% 
-    .[!is.na(.)] %>% 
-    paste(collapse = "")
-  
-  return(body)
-}
-
-#создание боращения
+#создание обращения
 createGreeting <- function(region_key) {
   greeting <- recipient_info$greeting[stri_detect_fixed(recipient_info$key, region_key)]
   return(greeting)
 }
 
-#создание строки о приложении
-createAppx <- function(region_key) {
-  if (region_key == "UENFS") {
-    appendix <- " "
-  } else {
-    if (if_frag) {
-      appendix <- "Приложение: Результаты фрагментного секвенирования… – на стр."
-    } else {
-      appendix <- "Приложение: Результаты полногеномного секвенирования… – на стр."
-    }
-  }
-  return(appendix)
-}
 
-#создание строки с подписью
-createSignature <- function() {
-  sig <- paste("Директор института",
-               paste(rep(" ", 76), collapse = ""),
-               "С.В. Балахонов",
-               collapse = "")
-  return(sig)
-}
-
-#создание строки с исполнителем
-createExec <- function() {
-  executor <- c("Сидорова Е.А. +7 (3952) 220-139")
-  return(executor)
-}
+# #создание строки с подписью
+# createSignature <- function() {
+#   sig <- paste("Директор института",
+#                paste(rep(" ", 76), collapse = ""),
+#                "С.В. Балахонов",
+#                collapse = "")
+#   return(sig)
+# }
 
 #создание заголовка таблицы 
 createTblhead <- function() {
@@ -194,24 +121,24 @@ createTbl <- function (full_table, region_key, if_frag) {
 formDocx <- function(full_table, region_key) {
   if_else(
     if_frag,
-    docFileName <- glue("{Sys.Date()}_{recipient_info$rec[recipient_info$key == region_key]}_wgs.docx"),
-    docFileName <- glue("{Sys.Date()}_{recipient_info$rec[recipient_info$key == region_key]}_frag.docx"))
+    docFileName <- glue("{report_date}_{recipient_info$rec[recipient_info$key == region_key]}_wgs.docx"),
+    docFileName <- glue("{report_date}_{recipient_info$rec[recipient_info$key == region_key]}_frag.docx"))
   
   doc <- read_docx(here("templates/template.docx")) %>%
     body_add_flextable(createHeading(region_key)) %>% 
-    body_add_par("", style = "Normal") %>% 
-    body_add_par("", style = "Normal") %>% 
+    body_add_par_n(2) %>%
     body_add_par(createGreeting(region_key), style = "my_heading") %>% 
     body_add_par("", style = "Normal") %>% 
     body_add_par(createBody(region_key), style = "my_body") %>% 
     body_add_par("", style = "Normal") %>% 
-    body_add_par(createAppx(region_key), style = "my_body") %>% 
-    body_add_par("", style = "Normal") %>% 
-    body_add_par("", style = "Normal") %>% 
-    body_add_par("", style = "Normal") %>% 
-    body_add_par(createSignature(), style = "my_body") %>% 
+    body_add_par(createAppxString(region_key, if_frag), style = "my_body") %>% 
+    body_add_par_n(3) %>%
+    body_add_par(
+      glue("Директор института {paste(rep(' ', 74), collapse = '')} С.В. Балахонов"),
+      style = "my_body"
+      ) %>% 
     body_add_par_n(16) %>% 
-    body_add_par(createExec(), style = "my_exec")
+    body_add_par("Сидорова Е.А. +7 (3952) 220-139", style = "my_exec")
     
   
   if(region_key != "UENFS") {
@@ -222,13 +149,13 @@ formDocx <- function(full_table, region_key) {
       body_add_flextable(createTbl(full_table, region_key, if_frag))
   }
   
-  print(doc, target = glue("./output/{Sys.Date()}/{docFileName}"))
+  print(doc, target = glue("./output/{report_date}/{docFileName}"))
 }
 
 ########## MAIN FLOW ##########
 
 ## Создание папки с результатами
-dir.create(glue("./output/{Sys.Date()}"), showWarnings = FALSE, recursive = TRUE)
+dir.create(glue("./output/{report_date}"), showWarnings = FALSE, recursive = TRUE)
 
 ## Загрузка шаблонных данных
 iso_dict <- read_csv(here("templates/iso_dict.csv"))

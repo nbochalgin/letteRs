@@ -9,7 +9,7 @@
 #' @examples
 #' CreateQuery(report_date = 2022-02-06, if_frag = TRUE)
 
-CreateQuery <- function(report_date, if_frag=FALSE) {
+CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE) {
   if (if_frag) {wgs_id_mark <- "IS NULL"} else {wgs_id_mark <- "IS NOT NULL"}
   
   glue(
