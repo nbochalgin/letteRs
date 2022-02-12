@@ -52,7 +52,7 @@ CreateQuery <- function(region) {
            ON frag_results.nipchi_id = income.nipchi_id
    RIGHT JOIN wgs_results AS wgs
            ON wgs.nipchi_id = income.nipchi_id
-        WHERE wgs.run_id = 'ch_ON_42'
+        WHERE wgs.run_id in ('ch_ON_43', 'ch_ill_24')
           AND income.region = '{region}'
           AND frag_results.variant IN ('Delta', 'Omicron', 'Probable Omicron', 'Иной')
      ORDER BY nipchi_id")

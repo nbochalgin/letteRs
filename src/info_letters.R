@@ -15,11 +15,12 @@ source("src/SitGetQuery.R")
 source("src/body_add_par_n.R")
 source("src/createBody.R")
 source("src/createHeading.R")
+source("src/createAppxString.R")
 
 
 if_frag <- FALSE
-report_date <- as.Date('2022-02-06')
-# report_date <- Sys.Date()
+# report_date <- as.Date('2022-02-06')
+report_date <- Sys.Date()
 
 ########## ФУНКЦИИ ##########
 
