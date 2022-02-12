@@ -1,7 +1,7 @@
 #' Query creator
 #' 
 #' @param report_date Date (YYYY-MM-DD) of report.
-#' @param if_frag A flag to mark sequencing method. TRUE for WGS.
+#' @param if_frag TRUE/FALSE. A flag to mark sequencing method. FALSE for WGS.
 #'
 #' @return A query text
 #' @export
