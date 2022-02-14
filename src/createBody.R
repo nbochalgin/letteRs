@@ -11,21 +11,26 @@
 #' @examples
 #' createBody(IRK, iso_dict = iso_dict)
 
-createBody <- function(region_key, i_dict = iso_dict) {
-    region <- i_dict$region[i_dict$key == region_key]
-    
-    body_blank <- filter(body_text, stri_detect_fixed(key, region_key)) %>% 
-        pull(body) %>% 
-        .[[1]] %>% 
-        as.list()
-    
-    body <- list(
-        paste(unique(full_table$variant), collapse = ", "),
-        paste(i_dict$rp[i_dict$region == unique(full_table$region)], collapse = ", "),
-        NA) %>% 
-        Map(c, body_blank, .) %>% 
+createBody <- function(region_key, iso_dict, raw_data, body_template) {
+    if (region_key %in% c("CNIIE", "UENFS")) {
+        regs <- paste(iso_dict$rp[iso_dict$region %in% unique(raw_data$region)],
+                      collapse = ", ")
+        vars <- paste(unique(raw_data$variant), collapse = ", ")
+    } else {
+        regs <- paste(iso_dict$rp[iso_dict$key == region_key],
+                      collapse = ", ")
+        vars <- paste(
+            unique(
+                raw_data$variant[raw_data$region == iso_dict$region[iso_dict$key == region_key]]
+            ),
+            collapse = ", ")
+    }
+        
+    body <- Map(c,
+                as.list(body_template$body[body_template$key == region_key][[1]]),
+                list(vars, regs, NA)) %>% 
         unlist() %>% 
-        .[!is.na(.)] %>% 
+        na.omit() %>% 
         paste(collapse = "")
     
     return(body)

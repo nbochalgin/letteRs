@@ -9,7 +9,7 @@
 #' createTblhead(if_frag = FALSE)
 
 
-createTblhead <- function(if_frag) {
+createTblhead <- function(if_frag = FALSE) {
     if (if_frag) {
         tblhead <- "Результаты фрагментного секвенирования образцов биологического материала от больных COVID-19"
     } else {

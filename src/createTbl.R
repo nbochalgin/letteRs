@@ -11,7 +11,7 @@
 #' 
 
 createTbl <- function (full_table, region_key, if_frag) {
-    if ((region_key == "CNIIE")) {
+    if (region_key == "CNIIE") {
         tbl <- full_table %>%
             select(" " = nipchi_id,
                    "Идентификационный номер образца (изолята)" = number,
@@ -31,7 +31,7 @@ createTbl <- function (full_table, region_key, if_frag) {
             border(i = NULL, j = NULL,
                    border = fp_border(),
                    part = "all")
-    } else if (!(region_key %in% c("UENFS", "CNIIE")) && !if_frag) {
+    } else if (!(region_key %in% c("UENFS", "CNIIE")) && (if_frag == FALSE)) {
         tbl <- full_table %>% 
             filter(stri_detect_fixed(region, iso_dict$region[iso_dict$key == region_key])) %>% 
             select("Идентификационный номер образца (изолята)" = number,
@@ -52,7 +52,7 @@ createTbl <- function (full_table, region_key, if_frag) {
             border(i = NULL, j = NULL,
                    border = fp_border(),
                    part = "all")
-    } else if (!(region_key %in% c("UENFS", "CNIIE")) && if_frag) {
+    } else if (!(region_key %in% c("UENFS", "CNIIE")) && (if_frag == TRUE)) {
         tbl <- full_table %>% 
             filter(stri_detect_fixed(region, iso_dict$region[iso_dict$key == region_key])) %>% 
             select(" " = nipchi_id,

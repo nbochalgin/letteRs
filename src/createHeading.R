@@ -12,9 +12,7 @@
 #' @examples
 #' createHeading(BU, nipchi_info = sender_info, recipient_info = recipient_info)
 
-createHeading <- function(key,
-                          nipchi_info = sender_info,
-                          rec_info = recipient_info) {
+createHeading <- function(key, nipchi_info, rec_info) {
     heading <- tibble(nipchi_info,
                       rec_info[rec_info$key == key, 2]) %>%
         flextable() %>% 

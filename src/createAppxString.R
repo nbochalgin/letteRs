@@ -11,7 +11,7 @@
 #' @examples
 #' createAppxString(BU, if_frag = TRUE)
 
-createAppxString <- function(region_key, if_frag) {
+createAppxString <- function(region_key, if_frag = FALSE) {
     if (region_key == "UENFS") {
         appendix <- " "
     } else {
