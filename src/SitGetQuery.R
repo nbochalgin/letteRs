@@ -1,4 +1,17 @@
-#дёргать запрос из БД
+#' DB connector to frag_seq_db
+#'
+#' @param query SQL query of character type
+#'
+#' @return Query result
+#' @export
+#'
+#' @examples
+#' query <- glue::glue(
+#' "    SELECT *
+#'        FROM frag_seq_results
+#'       WHERE wgs_id = 'ch_ON_22';")
+#' SitGetQuery(query)
+
 SitGetQuery <- function(query) {
   con <- dbConnect(RPostgres::Postgres(),
                    dbname = 'frag_seq_db', 
