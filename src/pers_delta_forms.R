@@ -1,3 +1,6 @@
+
+# Загрузка стандартных пакетов --------------------------------------------
+
 suppressPackageStartupMessages({
   library("dplyr")
   library("glue")
@@ -7,6 +10,15 @@ suppressPackageStartupMessages({
   library("RPostgres")
   library("stringi")
 })
+
+# Загрузка пользовательских функций ---------------------------------------
+
+funcs <- c("src/CreateQuery.R",
+           "src/SitGetQuery.R")
+
+for (i in seq_along(funcs)) {
+  source(funcs[i], encoding = "utf-8")
+}
 
 region <- c("Республика Тыва",
             "Республика Бурятия",
@@ -18,19 +30,6 @@ region <- c("Республика Тыва",
             "Республика Алтай")
 
 ########## ФУНКЦИИ ##########
-
-#дёргать запрос из БД
-SitGetQuery <- function(query) {
-  con <- dbConnect(RPostgres::Postgres(),
-                   dbname = 'frag_seq_db', 
-                   host = '192.168.0.145',
-                   port = 5432,
-                   user = 'postgres',
-                   password = Sys.getenv("frag_seq_db"))
-  db_output <- dbGetQuery(con, query)
-  dbDisconnect(con)
-  return(db_output)
-}
 
 #формировать текст запроса в БД на регион
 CreateQuery <- function(region) {
