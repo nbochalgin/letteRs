@@ -14,15 +14,29 @@ suppressPackageStartupMessages({
 
 # Загрузка пользовательских функций ---------------------------------------
 
-source("src/SitGetQuery.R") #
-source("src/CreateQuery.R") # 
-source("src/body_add_par_n.R") #
-source("src/createBody.R") #
-source("src/createHeading.R") #
-source("src/createAppxString.R") #
-source("src/createTblhead.R") #
-source("src/createTbl.R") #
-source("src/formDocx.R") #
+# source("src/SitGetQuery.R")
+# source("src/CreateQuery.R")
+# source("src/body_add_par_n.R")
+# source("src/createBody.R")
+# source("src/createHeading.R")
+# source("src/createAppxString.R")
+# source("src/createTblhead.R")
+# source("src/createTbl.R")
+# source("src/formDocx.R")
+
+funcs <- c("src/body_add_par_n.R",
+           "src/createAppxString.R",
+           "src/createBody.R",
+           "src/createHeading.R",
+           "src/CreateQuery.R",
+           "src/createTbl.R",
+           "src/createTblhead.R",
+           "src/formDocx.R",
+           "src/SitGetQuery.R")
+
+for (i in seq_along(funcs)) {
+  suppressWarnings(eval(parse(funcs[i], encoding="UTF-8")))
+}
 
 # Параметры ---------------------------------------------------------------
 
