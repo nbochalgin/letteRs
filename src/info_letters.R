@@ -1,3 +1,4 @@
+
 # Загрузка стандартных библиотек ------------------------------------------
 
 suppressPackageStartupMessages({
@@ -14,16 +15,6 @@ suppressPackageStartupMessages({
 
 # Загрузка пользовательских функций ---------------------------------------
 
-# source("src/SitGetQuery.R")
-# source("src/CreateQuery.R")
-# source("src/body_add_par_n.R")
-# source("src/createBody.R")
-# source("src/createHeading.R")
-# source("src/createAppxString.R")
-# source("src/createTblhead.R")
-# source("src/createTbl.R")
-# source("src/formDocx.R")
-
 funcs <- c("src/body_add_par_n.R",
            "src/createAppxString.R",
            "src/createBody.R",
@@ -35,12 +26,12 @@ funcs <- c("src/body_add_par_n.R",
            "src/SitGetQuery.R")
 
 for (i in seq_along(funcs)) {
-  suppressWarnings(eval(parse(funcs[i], encoding="UTF-8")))
+  source(funcs[i], encoding = "utf-8")
 }
 
 # Параметры ---------------------------------------------------------------
 
-if_frag <- FALSE
+if_frag <- FALSE # Переключатель выдачи фрагментных/полногеномных рез-тов
 report_date <- as.Date('2022-02-12')
 # report_date <- Sys.Date()
 
