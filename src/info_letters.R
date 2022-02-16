@@ -26,7 +26,7 @@ source("src/formDocx.R") #
 
 # Параметры ---------------------------------------------------------------
 
-if_frag <- FALSE
+if_frag <- TRUE
 report_date <- as.Date('2022-02-12')
 # report_date <- Sys.Date()
 
