@@ -24,7 +24,9 @@ funcs <- c("src/body_add_par_n.R",
            "src/createTbl.R",
            "src/createTblhead.R",
            "src/formDocx.R",
-           "src/SitGetQuery.R")
+           "src/SitGetQuery.R",
+           "src/createFormTbl.R",
+           "src/packXLSX.R")
 
 for (i in seq_along(funcs)) {
     source(funcs[i], encoding = "utf-8")
