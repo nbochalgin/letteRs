@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
     library("openxlsx")
     library("flextable")
     library("RPostgres")
+    library("purrr")
 })
 
 # Загрузка пользовательских функций ---------------------------------------
@@ -34,7 +35,7 @@ for (i in seq_along(funcs)) {
 
 # Параметры ---------------------------------------------------------------
 
-if_frag <- FALSE # Переключатель выдачи фрагментных/полногеномных рез-тов
+if_frag <- TRUE # Переключатель выдачи фрагментных/полногеномных рез-тов
 report_date <- as.Date('2022-02-12')
 # report_date <- Sys.Date()
 
@@ -63,7 +64,7 @@ region_key <- c("CNIIE",
 
 # Формировани и сохранение информационных писем
 l <- list(full_table = full_table)
-purrr::map2(l, region_key, formDocx)
+map2(l, region_key, formDocx)
 
 # Выдача персонифицированных форм -----------------------------------------
 
@@ -76,7 +77,8 @@ total_forms <- SitGetQuery(CreateQuery(report_date = report_date,
 rk_forms <- unique(total_forms$region)
 
 # Формировани и сохранение персонифицированных форм
-purrr::map(rk_forms,
-           function(x) packXLSX(raw_data = total_forms,
-                                regn = x,
-                                report_date = report_date))
+map(rk_forms,
+    function(x) packXLSX(raw_data = total_forms,
+                         regn = x,
+                         report_date = report_date,
+                         if_frag = if_frag))

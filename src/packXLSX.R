@@ -11,7 +11,7 @@
 #' @examples
 #' 
 
-packXLSX <- function(raw_data, regn, report_date) {
+packXLSX <- function(raw_data, regn, report_date, if_frag) {
     
     region_form <- createFormTbl(raw_data = raw_data,
                                  reg = regn)
@@ -78,6 +78,23 @@ packXLSX <- function(raw_data, regn, report_date) {
     
     saveWorkbook(
         wb,
-        glue("output/{report_date}/ФОРМА_перс_учета_Дельта_вар_{report_date}_{regn}.xlsx"),
+        if_else(
+            if_frag,
+            glue("output/{report_date}/ФОРМА_перс_учета_Дельта_вар_{report_date}_{regn}_frag.xlsx"),
+            glue("output/{report_date}/ФОРМА_перс_учета_Дельта_вар_{report_date}_{regn}_wgs.xlsx")),
         overwrite = TRUE)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
