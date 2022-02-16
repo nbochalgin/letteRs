@@ -47,10 +47,10 @@ sender_info <- paste(read_lines(here("templates/nipchi.txt")), collapse = "\n")
 body_text <- read_csv(here("templates/body.csv")) %>% 
     mutate(body = stri_split_fixed(body, "\\n"))
 
-# Выдача писем ------------------------------------------------------------
-
 # Создание папки с результатами
 dir.create(glue("./output/{report_date}"), showWarnings = FALSE, recursive = TRUE)
+
+# Выдача писем ------------------------------------------------------------
 
 # Выгрузка информации по данным секвенирования за отчётную дату
 full_table <- SitGetQuery(CreateQuery(report_date = report_date,
@@ -76,7 +76,7 @@ total_forms <- SitGetQuery(CreateQuery(report_date = report_date,
 # Определение списка территорий для выдачи форм
 rk_forms <- unique(total_forms$region)
 
-# Формировани и сохранение персонифицированных форм
+# Формирование и сохранение персонифицированных форм
 map(rk_forms,
     function(x) packXLSX(raw_data = total_forms,
                          regn = x,
