@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # Сформированные документы
 /output/*
+
+# Настройки подключения к БД
+/mnt/f/projects/R/letteRs/src/SitGetQuery.R
