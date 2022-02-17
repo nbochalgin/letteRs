@@ -36,13 +36,17 @@ iso_dict <- read_csv(here("templates/iso_dict.csv"))
 
 # Main Flow ---------------------------------------------------------------
 
+# Выгрузка причёсанной информации по данным секвенирования за отчётную дату
 total_forms <- SitGetQuery(CreateQuery(report_date = report_date,
                                        if_frag = if_frag,
                                        aim = "form"))
 
+# Определение списка территорий для выдачи форм
 rk_forms <- unique(total_forms$region)
 
+# Формирование и сохранение персонифицированных форм
 purrr::map(rk_forms,
            function(x) packXLSX(raw_data = total_forms,
                                 regn = x,
+                                report_date = report_date,
                                 report_date = report_date))

@@ -42,7 +42,7 @@ formDocx <- function(full_table, region_key) {
             style = "my_body"
         ) %>% 
         body_add_par_n(16) %>% 
-        body_add_par("Сидорова Е.А. +7 (3952) 220-139", style = "my_exec")
+        body_add_par("Шаракшанов М.Б. +7 (3952) 220-137", style = "my_exec")
     
     
     if(region_key != "UENFS") {

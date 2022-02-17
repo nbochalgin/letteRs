@@ -80,8 +80,8 @@ packXLSX <- function(raw_data, regn, report_date, if_frag) {
         wb,
         if_else(
             if_frag,
-            glue("output/{report_date}/ФОРМА_перс_учета_Дельта_вар_{report_date}_{regn}_frag.xlsx"),
-            glue("output/{report_date}/ФОРМА_перс_учета_Дельта_вар_{report_date}_{regn}_wgs.xlsx")),
+            glue("output/{report_date}/ФОРМА_перс_учета_вар_{report_date}_{regn}_frag.xlsx"),
+            glue("output/{report_date}/ФОРМА_перс_учета_вар_{report_date}_{regn}_wgs.xlsx")),
         overwrite = TRUE)
 }
 
