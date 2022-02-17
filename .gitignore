@@ -42,4 +42,4 @@ vignettes/*.pdf
 /output/*
 
 # Настройки подключения к БД
-/mnt/f/projects/R/letteRs/src/SitGetQuery.R
+src/SitGetQuery.R
