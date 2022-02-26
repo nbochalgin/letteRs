@@ -15,7 +15,7 @@ CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE, aim = "letter
   
   if (aim == "letter") {
     query <- glue(
-"    SELECT income.nipchi_id AS nipchi_id
+"    SELECT income.nipchi_id::int AS nipchi_id
           , income.income_id AS number
           , income.region AS region
           , frag_res.variant AS variant
@@ -33,7 +33,7 @@ CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE, aim = "letter
   
   } else if (aim == "form") {
     query <- glue(
-"    SELECT income.nipchi_id AS nipchi_id
+"    SELECT income.nipchi_id::int AS nipchi_id
           , income.income_id AS number
           , income.fio AS fio
           , income.region AS region

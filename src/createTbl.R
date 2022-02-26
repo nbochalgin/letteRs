@@ -18,9 +18,11 @@ createTbl <- function (full_table, region_key, if_frag) {
                    "Субъект, направивший пробу" = region,
                    "Заключение о генетическом варианте SARS-CoV-2" = variant) %>% 
             flextable() %>% 
+            colformat_num(i = NULL, j = 1,
+                          big.mark = "") %>% 
             align(align = "center", part = "all") %>% 
             width(j = 1:4,
-                  width = c(.5, 2.25, 2, 2.3),
+                  width = c(.57, 2.25, 2, 2.3),
                   unit = "in") %>% 
             font(i = NULL, j = NULL,
                  fontname = "Liberation Serif",
@@ -59,10 +61,13 @@ createTbl <- function (full_table, region_key, if_frag) {
                    "Идентификационный номер образца (изолята)" = number,
                    "Субъект, направивший пробу" = region,
                    "Заключение о генетическом варианте SARS-CoV-2" = variant) %>% 
-            flextable() %>% 
+            flextable() %>%
+            colformat_num(i = NULL, j = 1,
+                          big.mark = "") %>% 
+            align(align = "center", part = "all") %>% 
             align(align = "center", part = "all") %>% 
             width(j = 1:4,
-                  width = c(.5, 1.9, 1.7, 2.2),
+                  width = c(.57, 1.9, 1.7, 2.2),
                   unit = "in") %>% 
             font(i = NULL, j = NULL,
                  fontname = "Liberation Serif",
