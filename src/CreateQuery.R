@@ -18,7 +18,9 @@ CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE, aim = "letter
 "    SELECT income.nipchi_id::int AS nipchi_id
           , income.income_id AS number
           , income.region AS region
-          , frag_res.variant AS variant
+          , CASE WHEN frag_res.variant LIKE 'Omicron%' THEN 'Omicron'
+                 ELSE frag_res.variant
+                 END AS variant
           , wgs_res.pango_lineage AS pango_lineage
        FROM income_probes AS income
   LEFT JOIN frag_seq_results AS frag_res
@@ -42,7 +44,9 @@ CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE, aim = "letter
           , income.last_disease_start_date AS disease_date
           , LOWER(income.clinic) AS clinic
           , 'ФКУЗ Иркутский НИПЧИ' AS lab
-          , frag_res.variant AS variant
+          , CASE WHEN frag_res.variant LIKE 'Omicron%' THEN 'Omicron'
+                 ELSE frag_res.variant
+                 END AS variant
           , frag_res.date_end AS date_end
           , income.epid_anamnesis AS anamnesis
        FROM income_probes AS income
