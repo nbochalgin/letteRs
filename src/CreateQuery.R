@@ -30,7 +30,7 @@ CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE, aim = "letter
       WHERE frag_res.variant != 'Не определено'
         AND frag_res.date_end = '{report_date}'
         AND wgs_res.nipchi_id {wgs_id_mark}
-        AND frag_res.variant IN ('Delta', 'Omicron', 'Probable Omicron', 'Иной')
+        AND frag_res.variant IN ('Delta', 'Omicron', 'Omicron-1', 'Omicron-2', 'Probable Omicron', 'Иной')
    ORDER BY nipchi_id;")
   
   } else if (aim == "form") {
@@ -56,7 +56,7 @@ CreateQuery <- function(report_date = Sys.Date(), if_frag = FALSE, aim = "letter
          ON wgs_res.nipchi_id = frag_res.nipchi_id
       WHERE wgs_res.nipchi_id {wgs_id_mark}
         AND frag_res.date_end = '{report_date}'
-        AND frag_res.variant IN ('Delta', 'Omicron', 'Probable Omicron', 'Иной')
+        AND frag_res.variant IN ('Delta', 'Omicron', 'Omicron-1', 'Omicron-2', 'Probable Omicron', 'Иной')
         AND frag_res.variant != 'Не определено'
    ORDER BY nipchi_id")
   }
