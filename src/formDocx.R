@@ -11,11 +11,11 @@
 #' @examples
 #' 
 
-formDocx <- function(full_table, region_key) {
+formDocx <- function(full_table, region_key = region_key, recipient_info = rec_info) {
     docFileName <- if_else(
         if_frag,
-        docFileName <- glue("{report_date}_{recipient_info$rec[recipient_info$key == region_key]}_frag.docx"),
-        docFileName <- glue("{report_date}_{recipient_info$rec[recipient_info$key == region_key]}_wgs.docx"))
+        docFileName <- glue("{report_date}_{region_key}_{recipient_info$rec[recipient_info$key == region_key]}_frag.docx"),
+        docFileName <- glue("{report_date}_{region_key}_{recipient_info$rec[recipient_info$key == region_key]}_wgs.docx"))
     
     doc <- read_docx(here("templates/template.docx")) %>%
         body_add_flextable(createHeading(key = region_key,

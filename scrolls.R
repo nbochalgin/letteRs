@@ -35,14 +35,15 @@ for (i in seq_along(funcs)) {
 
 # Параметры ---------------------------------------------------------------
 
-if_frag <- FALSE # Переключатель выдачи фрагментных/полногеномных рез-тов
+if_frag <- TRUE # Переключатель выдачи фрагментных/полногеномных рез-тов
 # report_date <- as.Date('2022-02-12')
 report_date <- Sys.Date()
 
 # Загрузка типовых данных -------------------------------------------------
 
 iso_dict <- read_csv(here("templates/iso_dict.csv"))
-recipient_info <- read_csv(here("templates/recipient_info.csv"))
+rec_info <- read_csv(here("templates/recipient_info.csv"))
+recipient_info_chiefmo <- read_csv(here("templates/recipient_info_chiefmo.csv"))
 sender_info <- paste(read_lines(here("templates/nipchi.txt")), collapse = "\n")
 body_text <- read_csv(here("templates/body.csv")) %>% 
     mutate(body = stri_split_fixed(body, "\\n"))
@@ -58,13 +59,21 @@ full_table <- SitGetQuery(CreateQuery(report_date = report_date,
                                       aim = "letter"))
 
 # Определение списка территорий для выдачи писем
-region_key <- c("CNIIE",
-                "UENFS",
-                iso_dict$key[iso_dict$region %in% unique(full_table$region)])
+# region_key <- c("CNIIE",
+#                 "UENFS",
+#                 iso_dict$key[iso_dict$region %in% unique(full_table$region)])
 
-# Формировани и сохранение информационных писем
+region_key <- c(iso_dict$key[iso_dict$region %in% unique(full_table$region)])
+
+# Формировани и сохранение информационных писем на региональное управление
 l <- list(full_table = full_table)
 map2(l, region_key, formDocx)
+
+# Формировани и сохранение информационных писем на главврачей
+map(region_key, ~ formDocx(full_table = full_table,
+                           region_key = .,
+                           recipient_info = recipient_info_chiefmo))
+
 
 # Выдача персонифицированных форм -----------------------------------------
 
